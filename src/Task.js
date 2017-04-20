@@ -1,8 +1,8 @@
 "use strict"
 
 class Task {
-    constructor(title) {
-        this.done = false
-        this.title = title
+    constructor(title, done) {
+        this.title = title || ""
+        this.done = done || false
     }
 }
