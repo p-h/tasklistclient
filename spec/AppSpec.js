@@ -18,7 +18,7 @@ describe("App", () => {
     expect($._data($(view).find("div > button#new-button").get(0), 'events').click).toBeDefined()
   })
 
-  it("has a list of tasks", () => {
+  it("has a list of tasks with click events", () => {
     expect($(view).find("div.list-entry").length).toBeGreaterThan(0)
   })
 })
