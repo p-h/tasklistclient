@@ -1,4 +1,5 @@
 "use strict"
+const REMOTE_BASE = "http://zhaw.herokuapp.com/task_lists/"
 
 function listUpdated() {
     updateView()
