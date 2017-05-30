@@ -1,37 +1,50 @@
 "use strict"
 
 function getDemoTaskList() {
-    let demoTL = new TaskList("Pendenzenliste: Picknick");
-    demoTL.tasks.push(new Task("Bier kaufen", true));
-    demoTL.tasks.push(new Task("Würste kaufen", false));
-    demoTL.tasks.push(new Task("Ort finden", true));
-    demoTL.tasks.push(new Task("Wetter abklären", false));
-
-    return demoTL;
+    let demoTL = new TaskList("Pendenzenliste: Picknick")
+    demoTL.tasks.push(new Task("Bier kaufen", true))
+    demoTL.tasks.push(new Task("Würste kaufen", false))
+    demoTL.tasks.push(new Task("Ort finden", true))
+    demoTL.tasks.push(new Task("Wetter abklären", false))
+    return demoTL
 }
 
+function listUpdated() {
+    updateView()
+    updateRemote()
+}
 
 function updateView() {
-    let listView = generateTaskListView(taskList);
-
-    let body = $("body");
-
-    body.empty();
-    body.append(listView);
+    let listView = generateTaskListView(taskList)
+    let body = $("body")
+    body.empty()
+    body.append(listView)
 }
 
-function createNewTodo(){
+function updateRemote() {
+    $.post("http://zhaw.herokuapp.com/task_lists/" + encodeURIComponent(
+        taskList.id || ""), JSON.stringify(taskList), (data) => {
+        let newTaskList = JSON.parse(data)
+        taskList = new TaskList(newTaskList)
+    })
+}
+
+function createNewTodo() {
     taskList.tasks.push(new Task("New Task"))
-    updateView();
+    listUpdated()
 }
 
 function editWithInput(t) {
     return e => {
-        let c = $(e.currentTarget);
-        let replacementInput = $("<input>", {type: "text", value: c.text(), blur: e => {
-            t.title = $(e.currentTarget).val()
-            updateView()
-        }})
+        let c = $(e.currentTarget)
+        let replacementInput = $("<input>", {
+            type: "text",
+            value: c.text(),
+            blur: e => {
+                t.title = $(e.currentTarget).val()
+                listUpdated()
+            }
+        })
         c.replaceWith(replacementInput)
         replacementInput.focus().select()
     }
@@ -39,40 +52,47 @@ function editWithInput(t) {
 
 function generateTaskListView(tl) {
     let heading = $("<heading>", {
-        html :
-        $("<h1>", {
-            text : tl.title,
-            click : editWithInput(tl)
+        html: $("<h1>", {
+            text: tl.title,
+            click: editWithInput(tl)
         })
     })
-
-    let tasksLi = tl.tasks.map(generateTaskView);
-
-    let newTodoButton = $("<button>", {id: "new-button", text: "New todo", click: createNewTodo, "class": "btn btn-default col-md-6" });
-    let saveTodoButton = $("<button>", {id: "save-button", text: "Save Todos", "class": "btn btn-default col-md-6" });
-    let buttonRow = $("<div>", {"class": "row", html: [ newTodoButton, saveTodoButton ]});
-
+    let tasksLi = tl.tasks.map(generateTaskView)
+    let newTodoButton = $("<button>", {
+        id: "new-button",
+        text: "New todo",
+        click: createNewTodo,
+        "class": "btn btn-default col-md-6"
+    })
+    let saveTodoButton = $("<button>", {
+        id: "save-button",
+        text: "Save Todos",
+        "class": "btn btn-default col-md-6"
+    })
+    let buttonRow = $("<div>", {
+        "class": "row",
+        html: [newTodoButton, saveTodoButton]
+    })
     let container = $("<div>", {
-        id : "tasklist",
+        id: "tasklist",
         "class": "container",
-        html : [ heading ].concat(tasksLi).concat([buttonRow])
-    });
-
-    return container;
+        html: [heading].concat(tasksLi).concat([buttonRow])
+    })
+    return container
 }
 
-function generateTaskView(t){
+function generateTaskView(t) {
     return $("<div>", {
         "class": "list-entry row",
-        html : [
+        html: [
             $("<input>", {
                 "class": "col-md-1",
                 type: "checkbox",
                 checked: t.done,
                 change: e => {
-                    let c = $(e.currentTarget);
+                    let c = $(e.currentTarget)
                     t.done = c.prop("checked")
-                    updateView();
+                    listUpdated()
                 }
             }),
             $("<span>", {
@@ -81,5 +101,5 @@ function generateTaskView(t){
                 click: editWithInput(t)
             })
         ]
-    });
+    })
 }

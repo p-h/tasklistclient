@@ -1,14 +1,11 @@
 "use strict"
-
-let taskList = new TaskList("Pendenzenliste: ");
-
+let taskList = new TaskList("Pendenzenliste: ")
 $(() => {
     $("body").keypress(e => {
-        if(e.which == 252) {
-            taskList = getDemoTaskList();
-            updateView();
+        if (e.which == 252) {
+            taskList = getDemoTaskList()
+            listUpdated()
         }
     })
-
-    updateView();
-});
+    updateView()
+})
