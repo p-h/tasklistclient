@@ -1,7 +1,13 @@
 "use strict"
 class Task {
     constructor(title, done) {
-        this.title = title || ""
-        this.done = done || false
+        if (typeof (title) === 'string') {
+            this.title = title || ""
+            this.done = done || false
+        } else {
+            let copy = title
+            this.title = copy.title || ""
+            this.done = copy.done || false
+        }
     }
 }

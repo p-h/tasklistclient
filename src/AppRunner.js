@@ -1,11 +1,14 @@
 "use strict"
+const REMOTE_BASE = "http://zhaw.herokuapp.com/task_lists/";
 let taskList = new TaskList("Pendenzenliste: ")
 $(() => {
-    $("body").keypress(e => {
-        if (e.which == 252) {
-            taskList = getDemoTaskList()
-            listUpdated()
-        }
-    })
-    updateView()
+    let id = location.hash.substring(location.hash.indexOf('#') + 1)
+    if (id) {
+        $.getJSON(REMOTE_BASE + id, (data) => {
+            taskList = new TaskList(data)
+            updateView()
+        })
+    } else {
+        updateView()
+    }
 })

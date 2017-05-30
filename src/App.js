@@ -1,14 +1,5 @@
 "use strict"
 
-function getDemoTaskList() {
-    let demoTL = new TaskList("Pendenzenliste: Picknick")
-    demoTL.tasks.push(new Task("Bier kaufen", true))
-    demoTL.tasks.push(new Task("Würste kaufen", false))
-    demoTL.tasks.push(new Task("Ort finden", true))
-    demoTL.tasks.push(new Task("Wetter abklären", false))
-    return demoTL
-}
-
 function listUpdated() {
     updateView()
     updateRemote()
@@ -22,10 +13,12 @@ function updateView() {
 }
 
 function updateRemote() {
-    $.post("http://zhaw.herokuapp.com/task_lists/" + encodeURIComponent(
-        taskList.id || ""), JSON.stringify(taskList), (data) => {
+    $.post(REMOTE_BASE + encodeURIComponent(taskList.id || ""), JSON.stringify(
+        taskList), (data) => {
         let newTaskList = JSON.parse(data)
         taskList = new TaskList(newTaskList)
+        updateView()
+        location.hash = taskList.id ? "#" + taskList.id : ""
     })
 }
 
