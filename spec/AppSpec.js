@@ -20,8 +20,6 @@ describe("App", () => {
     it("has containers with two buttons", () => {
         expect($(view).find("div > button#new-button").length).toBeGreaterThan(
             0)
-        expect($(view).find("div > button#save-button").length)
-            .toBeGreaterThan(0)
     })
     it("has a new task button with an event registered", () => {
         expect($._data($(view).find("div > button#new-button").get(

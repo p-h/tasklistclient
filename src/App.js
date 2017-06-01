@@ -58,14 +58,9 @@ function generateTaskListView(tl) {
         click: createNewTodo,
         "class": "btn btn-default col-md-6"
     })
-    let saveTodoButton = $("<button>", {
-        id: "save-button",
-        text: "Save Todos",
-        "class": "btn btn-default col-md-6"
-    })
     let buttonRow = $("<div>", {
         "class": "row",
-        html: [newTodoButton, saveTodoButton]
+        html: newTodoButton
     })
     let container = $("<div>", {
         id: "tasklist",
